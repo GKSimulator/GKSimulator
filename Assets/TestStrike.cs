@@ -7,33 +7,44 @@ public class TestStrike : MonoBehaviour {
     private Collider test;
     public GameObject target;
     private Collider target_Col;
-    private Collision colisao;
+    private Collision col_;
+
+    public static bool colisao = false;
+
 	// Use this for initialization
 	void Start ()
     {
         //falta movimento continuo da bola
         bola_ = GetComponent<Rigidbody>();
-        //colisao = 
-        //target_Col = target.GetComponent<Collider>();
-        test = bola_.GetComponent<Collider>();
+        target_Col = GetComponent<Collider>();
     }
 
-    void OnTriggerEnter()
+    void OnCollisionExit(GameObject col)
     {
-      bola_.MovePosition(Vector3.zero);
-    }
-
-    void OnTriggerExit()
-    {
-        bola_.MovePosition(transform.position + transform.forward * (20.0f * Time.deltaTime));
-    }
-
-	// Update is called once per frame
-	void Update ()
-    {
-        while(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.Space))
+        if (col.tag == "Field")
         {
-            OnTriggerExit();
+            colisao = false;
+        }
+    }
+
+    void OnCollisionEnter(GameObject col)
+    {
+        if (col.tag == "GoalCollider")
+        {
+            colisao = true;
+        } 
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+        if (!colisao && Input.GetKey(KeyCode.A))
+        {
+            bola_.MovePosition(transform.position + transform.forward * (-20.0f * Time.deltaTime));
+        }
+        else
+        {
+            bola_.MovePosition(transform.position + transform.forward * (0.0f * Time.deltaTime));
         }
     }
 }
