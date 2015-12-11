@@ -14,6 +14,7 @@ public class StrikeManager : MonoBehaviour
 		{
 			int i = 0;
 
+            //randomizar direções da bola, cada posição do array será uma direção predefenida do remate
 
 			int[] easyStrikes = new int[4];
 			int[] mediumStrikes = new int[2];

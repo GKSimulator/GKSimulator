@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\GazeInputModule.cs" />
      <Compile Include="Assets\Scripts\SpeedBall.cs" />
      <Compile Include="Assets\Scripts\StrikeManager.cs" />
+     <Compile Include="Assets\TestStrike.cs" />
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
  <Reference Include="UnityEngine.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
