@@ -3,18 +3,24 @@ using System.Collections;
 
 public class TestStrike : MonoBehaviour {
 
-    private Rigidbody bola_;
+    public Rigidbody bola_;
+	public Transform bolaPos;
+	public float forcaRemate = 100f;
+	public float velRemate = 100f;
+
+
     //private Collider test;
 	public GameObject target;
 	public GameObject target2;
 	public GameObject target3;
 	private GameObject GoalCollider;
 	private GameObject GK_Collider;
-    //private Collider gkCol_;
+
     private Vector3 target1_pos;
     private Vector3 target2_pos;
     private Vector3 target3_pos;
     private Vector3 initPos;
+
     public float shootStr;
     private static bool canKick;
 
@@ -41,31 +47,42 @@ public class TestStrike : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider)
 	{
-        if (collider.gameObject.name == "GK_Collider")
-        {
-            Debug.Log("Colisao com GR!");
-            defs += 1;
-            goals = goals;
-            transform.position = initPos;
-        }
-        else if (collider.gameObject.name == "GoalCollider")
+        if (collider.gameObject.name == "GK_Collider") 
+		{
+			Debug.Log ("Colisao com GR!");
+			defs += 1;
+			goals = goals;
+			canKick = false;
+			transform.position = initPos;
+		} else canKick = true;
+        if (collider.gameObject.name == "GoalCollider")
         {
             Debug.Log("colisao com baliza!");
             goals += 1;
             defs = defs;
+			canKick = false;
             transform.position = initPos;
-        }
+		} else 
+		{ 
+			canKick = true; 
+		}
     }
 
     // Update is called once per frame
     void Update ()
     {
         // bola_.AddForce(new Vector3(0.0f, 0.0f, 0.0f));
-        if (canKick && Input.GetKey(KeyCode.A))
+        if (canKick && Input.GetKeyUp(KeyCode.A))
         {
             //yield return new WaitForSeconds(5.0f);
-            transform.position = Vector3.MoveTowards(transform.position, target1_pos, Time.deltaTime * shootStr);
-            transform.LookAt(target1_pos);
+
+			//Rigidbody bolaRB = Instantiate(bola_, bola_.transform.position, bola_.transform.rotation) as Rigidbody;
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
+
+			bolaPos.LookAt(target1_pos);
+
+            /*transform.position = Vector3.MoveTowards(transform.position, target1_pos, Time.deltaTime * shootStr);
+            transform.LookAt(target1_pos);*/
         }
 
         if (canKick && Input.GetKey(KeyCode.S))
