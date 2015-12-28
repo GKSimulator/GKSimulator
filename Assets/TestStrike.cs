@@ -39,21 +39,24 @@ public class TestStrike : MonoBehaviour {
         initPos = new Vector3(-32f, 0.2f, 4.6f);
     }
 
-	void OnColliderEnter(Collider GoalCollider)
+	void OnTriggerEnter(Collider collider)
 	{
-        Debug.Log("colisao com baliza!");
-        goals += 1;
-        defs = defs;
-        transform.position = initPos;
+        if (collider.gameObject.name == "GK_Collider")
+        {
+            Debug.Log("Colisao com GR!");
+            defs += 1;
+            goals = goals;
+            transform.position = initPos;
+        }
+        else if (collider.gameObject.name == "GoalCollider")
+        {
+            Debug.Log("colisao com baliza!");
+            goals += 1;
+            defs = defs;
+            transform.position = initPos;
+        }
     }
 
-	void OnTriggerEnter(Collider GK_Collider)
-	{
-        Debug.Log("Colisao com GK!");
-		defs += 1;
-		goals = goals;
-        transform.position = initPos;
-    }
     // Update is called once per frame
     void Update ()
     {
