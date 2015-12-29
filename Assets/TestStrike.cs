@@ -38,11 +38,12 @@ public class TestStrike : MonoBehaviour {
         canKick = true;
         goals = 0;
         defs = 0;
-        bola_ = GetComponent<Rigidbody>();
-        target1_pos = target.transform.position;
+		target1_pos = target.transform.position;
 		target2_pos = target2.transform.position;
-        target3_pos = target3.transform.position;
-        initPos = new Vector3(-32f, 0.2f, 4.6f);
+		target3_pos = target3.transform.position;
+		initPos = new Vector3(-32f, 0.2f, 4.6f);
+        bola_ = GetComponent<Rigidbody>();
+		bola_.isKinematic = false;
     }
 
 	void OnTriggerEnter(Collider collider)
@@ -53,18 +54,26 @@ public class TestStrike : MonoBehaviour {
 			defs += 1;
 			goals = goals;
 			canKick = false;
+			bola_.isKinematic = true;
+			bola_.transform.LookAt(GK_Collider.transform.position);
 			transform.position = initPos;
-		} else canKick = true;
+			transform.rotation = Quaternion.identity;
+		} //else canKick = true;
+
         if (collider.gameObject.name == "GoalCollider")
         {
             Debug.Log("colisao com baliza!");
             goals += 1;
             defs = defs;
 			canKick = false;
-            transform.position = initPos;
+			bola_.isKinematic = true;
+			bola_.transform.LookAt(GoalCollider.transform.position);
+			transform.position = initPos;
+			transform.rotation = Quaternion.identity;
 		} else 
 		{ 
-			canKick = true; 
+			canKick = true;
+			bola_.isKinematic = false;
 		}
     }
 
@@ -78,25 +87,24 @@ public class TestStrike : MonoBehaviour {
 
 			//Rigidbody bolaRB = Instantiate(bola_, bola_.transform.position, bola_.transform.rotation) as Rigidbody;
 			bola_.AddForce(bola_.transform.forward * forcaRemate);
-
 			bolaPos.LookAt(target1_pos);
 
             /*transform.position = Vector3.MoveTowards(transform.position, target1_pos, Time.deltaTime * shootStr);
             transform.LookAt(target1_pos);*/
         }
 
-        if (canKick && Input.GetKey(KeyCode.S))
+		if (canKick && Input.GetKeyUp(KeyCode.S))
         {
             //yield return new WaitForSeconds(5.0f);
-            transform.position = Vector3.MoveTowards(transform.position, target2_pos, Time.deltaTime * shootStr);
-            transform.LookAt(target2_pos);
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
+			bolaPos.LookAt(target2_pos);
         }  
 
-        if (canKick && Input.GetKey(KeyCode.D))
+		if (canKick && Input.GetKeyUp(KeyCode.D))
         {
             //yield return new WaitForSeconds(5.0f);
-            transform.position = Vector3.MoveTowards(transform.position, target3_pos, Time.deltaTime * shootStr);
-            transform.LookAt(target3_pos);
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
+			bolaPos.LookAt(target3_pos);
         }
 
     }
