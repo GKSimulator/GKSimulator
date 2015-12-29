@@ -20,6 +20,7 @@ public class TestStrike : MonoBehaviour {
     private Vector3 target2_pos;
     private Vector3 target3_pos;
     private Vector3 initPos;
+	private Quaternion rotInit;
 
     public float shootStr;
     private static bool canKick;
@@ -33,33 +34,40 @@ public class TestStrike : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()
-    {
-        //falta movimento continuo da bola
+	{
         canKick = true;
         goals = 0;
         defs = 0;
+		rotInit = bola_.rotation;
 		target1_pos = target.transform.position;
 		target2_pos = target2.transform.position;
 		target3_pos = target3.transform.position;
 		initPos = new Vector3(-32f, 0.2f, 4.6f);
         bola_ = GetComponent<Rigidbody>();
 		bola_.isKinematic = false;
-    }
+		bola_.velocity = Vector3.zero;
+		bola_.angularVelocity = Vector3.zero;
+	}
 
 	void OnTriggerEnter(Collider collider)
 	{
-        if (collider.gameObject.name == "GK_Collider") 
-		{
+        if (collider.gameObject.name == "GK_Collider") {
 			Debug.Log ("Colisao com GR!");
 			defs += 1;
 			goals = goals;
 			canKick = false;
 			bola_.isKinematic = true;
-			bola_.transform.LookAt(GK_Collider.transform.position);
+			bola_.velocity = Vector3.zero;
+			bola_.angularVelocity = Vector3.zero;
 			transform.position = initPos;
-			transform.rotation = Quaternion.identity;
-		} //else canKick = true;
-
+			transform.rotation = rotInit;
+			bola_.isKinematic = false;
+			canKick = true;
+		} else 
+		{
+			canKick = true;
+			bola_.isKinematic = false;
+		}
         if (collider.gameObject.name == "GoalCollider")
         {
             Debug.Log("colisao com baliza!");
@@ -67,44 +75,49 @@ public class TestStrike : MonoBehaviour {
             defs = defs;
 			canKick = false;
 			bola_.isKinematic = true;
-			bola_.transform.LookAt(GoalCollider.transform.position);
+			bola_.velocity = Vector3.zero;
+			bola_.angularVelocity = Vector3.zero;
 			transform.position = initPos;
-			transform.rotation = Quaternion.identity;
+			transform.rotation = rotInit;
+			bola_.isKinematic = false;
+			canKick = true;
 		} else 
 		{ 
-			canKick = true;
+			bola_.isKinematic = true;
+			bola_.velocity = Vector3.zero;
+			bola_.angularVelocity = Vector3.zero;
+			transform.position = initPos;
+			transform.rotation = rotInit;
 			bola_.isKinematic = false;
+			canKick = true;
 		}
     }
 
     // Update is called once per frame
     void Update ()
     {
-        // bola_.AddForce(new Vector3(0.0f, 0.0f, 0.0f));
         if (canKick && Input.GetKeyUp(KeyCode.A))
         {
             //yield return new WaitForSeconds(5.0f);
-
-			//Rigidbody bolaRB = Instantiate(bola_, bola_.transform.position, bola_.transform.rotation) as Rigidbody;
-			bola_.AddForce(bola_.transform.forward * forcaRemate);
+			bola_.isKinematic = false;
 			bolaPos.LookAt(target1_pos);
-
-            /*transform.position = Vector3.MoveTowards(transform.position, target1_pos, Time.deltaTime * shootStr);
-            transform.LookAt(target1_pos);*/
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
         }
 
 		if (canKick && Input.GetKeyUp(KeyCode.S))
         {
             //yield return new WaitForSeconds(5.0f);
-			bola_.AddForce(bola_.transform.forward * forcaRemate);
+			bola_.isKinematic = false;
 			bolaPos.LookAt(target2_pos);
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
         }  
 
 		if (canKick && Input.GetKeyUp(KeyCode.D))
         {
             //yield return new WaitForSeconds(5.0f);
-			bola_.AddForce(bola_.transform.forward * forcaRemate);
+			bola_.isKinematic = false;
 			bolaPos.LookAt(target3_pos);
+			bola_.AddForce(bola_.transform.forward * forcaRemate);
         }
 
     }
